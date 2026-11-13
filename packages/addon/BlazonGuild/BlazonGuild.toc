@@ -1,0 +1,107 @@
+## Interface: 16001
+## Title: |cffd0b078BlazonGuild|r
+## Notes: Your guild inside the game: raids, chat, map, Arena, crafting, treasury, rankings and more, addon to addon.
+## Notes-esES: Tu hermandad dentro del juego: raids, chat, mapa, Arena, artesanía, tesorería, rankings y más, de addon a addon.
+## Notes-esMX: Tu hermandad dentro del juego: raids, chat, mapa, Arena, artesanía, tesorería, rankings y más, de addon a addon.
+## Notes-deDE: Deine Gilde im Spiel: Schlachtzüge, Chat, Karte, Arena, Handwerk, Gildenkasse, Ranglisten und mehr, von Addon zu Addon.
+## Notes-frFR: Votre guilde dans le jeu : raids, discussion, carte, Arène, artisanat, trésorerie, classements et plus, d'addon à addon.
+## Notes-itIT: La tua gilda nel gioco: incursioni, chat, mappa, Arena, artigianato, tesoreria, classifiche e altro, da addon ad addon.
+## Notes-ptBR: Sua guilda dentro do jogo: raides, chat, mapa, Arena, profissões, tesouraria, rankings e mais, de addon para addon.
+## Notes-ruRU: Ваша гильдия в игре: рейды, чат, карта, Арена, ремёсла, казна, рейтинги и многое другое, от аддона к аддону.
+## Author: BlazonGuild
+## Version: 0.29.2
+## SavedVariables: BlazonGuildDB
+## IconTexture: Interface\AddOns\BlazonGuild\Media\logo.png
+## AddonCompartmentFunc: BlazonGuild_OnAddonCompartmentClick
+## AddonCompartmentFuncOnEnter: BlazonGuild_OnAddonCompartmentEnter
+## AddonCompartmentFuncOnLeave: BlazonGuild_OnAddonCompartmentLeave
+## Category: Guild
+
+Core\Init.lua
+Core\Names.lua
+Core\Serial.lua
+Core\Theme.lua
+Core\Locale.lua
+Core\Gamepad.lua
+Locales\en.lua
+Locales\de.lua
+Locales\fr.lua
+Locales\it.lua
+Locales\pt.lua
+Locales\ru.lua
+Data\Guild.lua
+Core\Consent.lua
+Core\Comm.lua
+Core\Peers.lua
+Core\Diagnostics.lua
+Core\Ed25519.lua
+Core\Sign.lua
+Data\Store.lua
+Data\Instances.lua
+Data\Raids.lua
+Data\Groups.lua
+Data\People.lua
+Data\Chat.lua
+Data\Board.lua
+Data\AllianceRules.lua
+Data\Alliance.lua
+Data\AllianceLead.lua
+Data\AllianceHall.lua
+Data\War.lua
+Data\AllianceActs.lua
+Data\Layers.lua
+Data\Crafts.lua
+Data\Treasury.lua
+Data\Recruit.lua
+Data\Wanted.lua
+Data\Honors.lua
+Data\Arena.lua
+Data\Tourney.lua
+Data\Bones.lua
+Data\Lotto.lua
+Data\ArenaFace.lua
+Data\Armory.lua
+Data\PvE.lua
+Data\GuildRanks.lua
+Data\Sightings.lua
+Core\API.lua
+UI\Widgets.lua
+UI\Controls.lua
+UI\Dialog.lua
+UI\Showcase.lua
+UI\Window.lua
+UI\Minimize.lua
+UI\Guide.lua
+UI\Profile.lua
+UI\Hooks.lua
+UI\Notices.lua
+UI\Marks.lua
+UI\Radar.lua
+UI\RaidGroups.lua
+UI\Bracket.lua
+UI\FaceOff.lua
+UI\SelfTest.lua
+UI\ViewAs.lua
+Data\DemoData.lua
+Core\Demo.lua
+UI\Dice.lua
+UI\Tavern.lua
+UI\Views\Overview.lua
+UI\Views\Roster.lua
+UI\Views\Chat.lua
+UI\Views\Board.lua
+UI\Views\Alliance.lua
+UI\Views\War.lua
+UI\Views\Map.lua
+UI\Views\Crafts.lua
+UI\Views\Treasury.lua
+UI\Views\Recruit.lua
+UI\Views\Wanted.lua
+UI\Views\Rankings.lua
+UI\Views\Arena.lua
+UI\Views\Raids.lua
+UI\Views\Dungeons.lua
+UI\Views\Armory.lua
+UI\Views\PvE.lua
+UI\Views\Calendar.lua
+UI\Views\Admin.lua

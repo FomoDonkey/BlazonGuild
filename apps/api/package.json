@@ -1,0 +1,23 @@
+{
+  "name": "@blazonguild/api",
+  "version": "0.3.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch --env-file-if-exists=../../.env src/server.ts",
+    "start": "tsx --env-file-if-exists=../../.env src/server.ts",
+    "typecheck": "tsc --noEmit -p .",
+    "test": "vitest run",
+    "sync:guild": "tsx --env-file-if-exists=../../.env src/cli/sync-guild.ts",
+    "admin:create": "tsx --env-file-if-exists=../../.env src/cli/create-admin.ts"
+  },
+  "dependencies": {
+    "@blazonguild/data-providers": "*",
+    "@blazonguild/database": "*",
+    "@blazonguild/types": "*",
+    "@hono/node-server": "^2.1.7",
+    "@hono/zod-openapi": "^1.6.3",
+    "hono": "^4.13.18",
+    "zod": "^4.1.12"
+  }
+}

@@ -1,0 +1,5 @@
+<Bindings>
+  <Binding name="BLAZONGUILD_TOGGLE" header="BLAZONGUILD" category="ADDONS">
+    BlazonGuild_Toggle()
+  </Binding>
+</Bindings>

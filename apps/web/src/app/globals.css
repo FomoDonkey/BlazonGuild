@@ -1,0 +1,253 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*
+ * FOREVER design tokens — Blizzard Hybrid.
+ * Colours are RGB triplets so Tailwind can apply alpha (`bg-surface/80`).
+ * Contrast pairs are validated by tools/contrast.mjs (WCAG 2.2 AA).
+ */
+:root,
+:root[data-theme='dark'],
+.cinematic {
+  color-scheme: dark;
+  --c-canvas: 11 14 19; /* #0B0E13 */
+  --c-sunken: 16 20 28; /* #10141C Obsidian */
+  --c-surface: 21 27 36; /* #151B24 */
+  --c-elevated: 34 44 56; /* #222C38 */
+  --c-line: 36 46 60;
+  --c-line-strong: 104 117 137;
+  --c-text: 231 234 240; /* #E7EAF0 Ivory */
+  --c-text-2: 170 179 193;
+  --c-text-3: 138 148 163;
+  --c-accent: 208 176 120; /* #D0B078 Azerite gold */
+  --c-accent-hi: 230 204 152;
+  --c-on-accent: 16 20 28;
+  --c-success: 86 185 138;
+  --c-warning: 227 173 84;
+  --c-danger: 228 120 128;
+  --c-info: 109 168 232;
+  --c-horde: 236 118 106;
+  --c-alliance: 104 150 230;
+
+  /* Class colours (in-game canonical values) */
+  --class-1: #c69b6d; --class-2: #f48cba; --class-3: #aad372; --class-4: #fff468; --class-5: #ffffff;
+  --class-7: #4aa0ff; --class-8: #3fc7eb; --class-9: #8788ee; --class-11: #ff7c0a;
+  /* Item quality */
+  --q-POOR: #9d9d9d; --q-COMMON: #ffffff; --q-UNCOMMON: #1eff00; --q-RARE: #2d8cff; --q-EPIC: #b552ff;
+  --q-LEGENDARY: #ff8000; --q-ARTIFACT: #e6cc80; --q-HEIRLOOM: #00ccff;
+
+  --tooltip-bg: 9 12 24;
+  --tint-strength: 34%;
+}
+
+:root[data-theme='light'] {
+  color-scheme: light;
+  --c-canvas: 233 236 241; /* cool vellum, not cream */
+  --c-sunken: 222 226 233;
+  --c-surface: 255 255 255;
+  --c-elevated: 245 246 249;
+  --c-line: 211 216 225;
+  --c-line-strong: 128 138 153;
+  --c-text: 16 20 28;
+  --c-text-2: 61 70 84;
+  --c-text-3: 86 96 111;
+  --c-accent: 122 94 40; /* gold darkened for ≥4.5:1 on white */
+  --c-accent-hi: 96 72 26;
+  --c-on-accent: 255 255 255;
+  --c-success: 26 112 74;
+  --c-warning: 133 86 0;
+  --c-danger: 176 44 56;
+  --c-info: 33 92 160;
+  --c-horde: 164 38 30;
+  --c-alliance: 34 84 170;
+
+  --class-1: #7a5533; --class-2: #a3326a; --class-3: #4c6e1f; --class-4: #6e6400; --class-5: #4d5663;
+  --class-7: #0058ad; --class-8: #0e6e87; --class-9: #4b4cb8; --class-11: #a34a00;
+  --q-POOR: #5f5f5f; --q-COMMON: #3d4450; --q-UNCOMMON: #167a08; --q-RARE: #0058ad; --q-EPIC: #7a1fbf;
+  --q-LEGENDARY: #a35200; --q-ARTIFACT: #7a6420; --q-HEIRLOOM: #00708c;
+  --tint-strength: 16%;
+}
+
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme]) {
+    color-scheme: light;
+  }
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    text-rendering: optimizeLegibility;
+  }
+  body {
+    @apply bg-canvas font-sans text-fg antialiased;
+    font-size: 0.9375rem;
+    line-height: 1.55;
+  }
+  h1, h2, h3 {
+    text-wrap: balance;
+  }
+  :focus-visible {
+    outline: 2px solid rgb(var(--c-accent));
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+  ::selection {
+    background: rgb(var(--c-accent) / 0.35);
+  }
+  [hidden] {
+    display: none !important;
+  }
+}
+
+@layer components {
+  /* Display type: Marcellus (flared serif in the Friz Quadrata tradition of the WoW UI). */
+  .t-display {
+    @apply font-display tracking-[0.01em] text-fg;
+    font-feature-settings: 'kern', 'liga';
+  }
+  .t-num {
+    font-variant-numeric: tabular-nums lining-nums;
+  }
+  /* Figures always use the data face: Marcellus renders "1" like a roman "I". */
+  .t-figure {
+    @apply font-sans font-semibold tracking-tight text-fg;
+    font-variant-numeric: tabular-nums lining-nums;
+  }
+  .panel {
+    @apply rounded-md border border-line bg-surface;
+  }
+  .hairline {
+    @apply border-line;
+  }
+  .btn {
+    @apply inline-flex min-h-[40px] items-center justify-center gap-2 rounded px-4 text-sm font-medium transition-colors duration-150 disabled:cursor-not-allowed disabled:opacity-50;
+  }
+  .btn-primary {
+    @apply btn bg-accent text-accent-on hover:bg-accent-hi;
+  }
+  .btn-secondary {
+    @apply btn border border-line-strong bg-elevated text-fg hover:border-accent/60;
+  }
+  .btn-ghost {
+    @apply btn text-fg-2 hover:bg-elevated hover:text-fg;
+  }
+  .field {
+    @apply min-h-[40px] w-full rounded border border-line-strong bg-sunken px-3 text-sm text-fg placeholder:text-fg-3 focus:border-accent focus:outline-none focus-visible:outline-2;
+  }
+  .label {
+    @apply text-xs font-medium text-fg-2;
+  }
+  .link {
+    @apply text-accent underline-offset-4 hover:underline;
+  }
+  .skeleton {
+    @apply animate-pulse rounded bg-elevated;
+  }
+}
+
+@layer utilities {
+  /* ── Blizzard Hybrid surfaces ─────────────────────────────────────────── */
+  .surface-metal {
+    background-color: rgb(var(--c-sunken));
+    background-image: var(--tex-metal), linear-gradient(180deg, rgb(255 255 255 / 0.035), rgb(0 0 0 / 0.22));
+    background-blend-mode: overlay, normal;
+  }
+  .plate {
+    background-color: rgb(var(--c-surface));
+    background-image: var(--tex-metal), linear-gradient(180deg, rgb(255 255 255 / 0.05), rgb(0 0 0 / 0.25));
+    background-blend-mode: overlay, normal;
+    border: 1px solid rgb(0 0 0 / 0.55);
+    box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.07), inset 0 0 0 1px rgb(var(--c-accent) / 0.12), 0 14px 30px -18px rgb(0 0 0 / 0.9);
+  }
+  .frame-gold {
+    border: 1px solid rgb(var(--c-accent) / 0.38);
+    box-shadow: inset 0 0 0 1px rgb(0 0 0 / 0.5), inset 0 1px 0 rgb(255 240 200 / 0.06), 0 18px 40px -24px rgb(0 0 0 / 0.95);
+  }
+  .rule-gold {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgb(var(--c-accent) / 0.7) 18%, rgb(var(--c-accent-hi)) 50%, rgb(var(--c-accent) / 0.7) 82%, transparent);
+  }
+  .text-gold {
+    background-image: linear-gradient(180deg, #fff3cf 0%, #f0d48f 28%, #c99a45 52%, #8a6424 66%, #e8c983 86%, #fff0c4 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    filter: drop-shadow(0 2px 0 rgb(0 0 0 / 0.6));
+  }
+  :root[data-theme=light] .text-gold:not(.cinematic *) {
+    background-image: linear-gradient(180deg, #8a6424, #5e4214 60%, #8a6424);
+    filter: none;
+  }
+  .glow-class {
+    filter: drop-shadow(0 0 14px color-mix(in srgb, var(--cls) 55%, transparent));
+  }
+  .text-class {
+    color: var(--cls);
+  }
+  .scrollbar-thin {
+    scrollbar-width: thin;
+    scrollbar-color: rgb(var(--c-line-strong)) transparent;
+  }
+  .mask-fade-b {
+    mask-image: linear-gradient(to bottom, black 70%, transparent);
+  }
+}
+
+/* Page atmosphere: a faint top light and film grain over the whole canvas. */
+body {
+  background-image: radial-gradient(110% 60% at 50% -8%, rgb(var(--c-accent) / 0.07), transparent 60%);
+  background-attachment: fixed;
+}
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 60;
+  opacity: 0.045;
+  background-image: var(--tex-grain);
+}
+:root[data-theme='light'] body::after { opacity: 0.025; }
+
+/* Subtle grain so large dark areas do not band; disabled when transparency is reduced. */
+.grain::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.035;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+@media (prefers-reduced-transparency: reduce) {
+  .grain::before,
+  body::after {
+    display: none;
+  }
+}
+
+/* Drifting fog band for cinematic heroes (pure CSS, paused for reduced motion). */
+.fog {
+  background:
+    radial-gradient(40% 60% at 20% 60%, rgb(255 255 255 / 0.07), transparent 70%),
+    radial-gradient(35% 55% at 55% 50%, rgb(255 255 255 / 0.06), transparent 70%),
+    radial-gradient(45% 60% at 85% 65%, rgb(255 255 255 / 0.05), transparent 70%);
+  filter: blur(18px);
+  animation: fog-drift 38s ease-in-out infinite alternate;
+}
+@keyframes fog-drift {
+  from { transform: translateX(-4%); }
+  to { transform: translateX(4%); }
+}

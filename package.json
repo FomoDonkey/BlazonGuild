@@ -1,0 +1,45 @@
+{
+  "name": "blazonguild",
+  "version": "0.3.0",
+  "description": "BlazonGuild — plataforma multi-guild para World of Warcraft: Forever (web + API + addon + analítica)",
+  "private": true,
+  "type": "module",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "engines": {
+    "node": ">=20.19"
+  },
+  "scripts": {
+    "dev": "node tools/dev.mjs",
+    "dev:api": "npm run dev -w @blazonguild/api",
+    "dev:web": "npm run dev -w @blazonguild/web",
+    "build": "npm run typecheck && npm run build -w @blazonguild/web",
+    "typecheck": "npm run typecheck -w @blazonguild/types -w @blazonguild/data-providers -w @blazonguild/database -w @blazonguild/api -w @blazonguild/web",
+    "test": "npm run test -w @blazonguild/data-providers -w @blazonguild/api -w @blazonguild/addon",
+    "addon:install": "npm run install:game -w @blazonguild/addon",
+    "addon:art": "node tools/addon-art.mjs",
+    "db:generate": "npm run db:generate -w @blazonguild/database",
+    "sync:guild": "npm run sync:guild -w @blazonguild/api --",
+    "admin:create": "npm run admin:create -w @blazonguild/api --",
+    "probe:api": "node tools/validator/probe-blizzard-api.mjs",
+    "screenshots": "node tools/screenshots.mjs"
+  },
+  "devDependencies": {
+    "@types/node": "^20.19.0",
+    "drizzle-kit": "^0.31.11",
+    "drizzle-orm": "^0.45.4",
+    "playwright": "1.65.0",
+    "tsx": "^4.23.15",
+    "typescript": "5.9.3",
+    "vitest": "^4.1.12"
+  },
+  "keywords": [
+    "world-of-warcraft",
+    "wow-forever",
+    "guild-management",
+    "blizzard-api"
+  ],
+  "license": "UNLICENSED"
+}

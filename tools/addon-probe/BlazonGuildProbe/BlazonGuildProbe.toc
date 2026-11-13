@@ -1,0 +1,8 @@
+## Interface: 16001
+## Title: BlazonGuild (sonda)
+## Notes: Sonda de desarrollo de BlazonGuild: comprueba qué permite este cliente. No cambia nada del juego y se puede borrar.
+## Author: BlazonGuild
+## Version: 0.0.1
+## SavedVariables: BlazonGuildProbeDB
+
+BlazonGuildProbe.lua

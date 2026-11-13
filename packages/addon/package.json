@@ -1,0 +1,16 @@
+{
+  "name": "@blazonguild/addon",
+  "version": "0.29.2",
+  "private": true,
+  "type": "module",
+  "description": "In-game addon for World of Warcraft: Forever (Lua). Node only runs its offline checks and the dev install.",
+  "scripts": {
+    "check": "node tests/check-syntax.mjs",
+    "test": "node tests/check-syntax.mjs && node tests/sign.mjs && node tests/simulate.mjs && node tests/serial.mjs && node tests/network.mjs && node tests/raids.mjs && node tests/people.mjs && node tests/chat.mjs && node tests/board.mjs && node tests/alliance.mjs && node tests/war.mjs && node tests/map.mjs && node tests/layout.mjs && node tests/window.mjs && node tests/crafts.mjs && node tests/treasury.mjs && node tests/recruit.mjs && node tests/wanted.mjs && node tests/arena.mjs && node tests/raidgroups.mjs && node tests/tourney.mjs && node tests/tavern.mjs && node tests/locales.mjs && node tests/guilds.mjs && node tests/armory.mjs && node tests/guildranks.mjs && node tests/radar.mjs && node tests/acts.mjs && node tests/arenaface.mjs && node tests/extras.mjs && node tests/fixes0250.mjs && node tests/demo.mjs && node tests/audit.mjs",
+    "install:game": "node tests/install-game.mjs"
+  },
+  "devDependencies": {
+    "luaparse": "0.3.1",
+    "wasmoon": "1.16.0"
+  }
+}
