@@ -71,7 +71,12 @@ function BG:RecordError(where, err)
   BG:Debug(text)
   if BG.db then
     BG.db.errors = BG.db.errors or {}
-    table.insert(BG.db.errors, 1, { at = date("!%Y-%m-%dT%H:%M:%SZ"), version = BG.version, where = tostring(where), error = tostring(err) })
+    local last, at = BG.db.errors[1], date("!%Y-%m-%dT%H:%M:%SZ")
+    if last and last.where == tostring(where) and last.error == tostring(err) and last.version == BG.version then
+      last.count, last.at = (last.count or 1) + 1, at -- (the same again: counted, so one repeated error does not push out the rest)
+    else
+      table.insert(BG.db.errors, 1, { at = at, version = BG.version, where = tostring(where), error = tostring(err) })
+    end
     while #BG.db.errors > 30 do
       table.remove(BG.db.errors)
     end
@@ -81,6 +86,64 @@ function BG:RecordError(where, err)
     BG:Print("ha registrado un error interno; queda guardado para revisarlo.")
   end
 end
+
+-- A call of ours the game refused (ADDON_ACTION_BLOCKED; FORBIDDEN for one only the game's own interface may make).
+-- The game only counts them in its addon list («Las acciones de interfaz han fallado debido a este add-on: 3», Peregrino,
+-- 2026-11-18) and says nothing of which call or from where. It sends the event inside the refused call, so the stack
+-- still holds the line that made it: each one is kept as an internal error (Administración, «Errores internos», and
+-- /bg errores) with the function the game names, whether it was in combat, and that line, so it can be fixed.
+-- (Until 0.29.3 nothing was kept, and each cause had to be found by hand.)
+-- Pure: where a stack comes from, as "UI/Marks.lua:155 < UI/Marks.lua:259" (ours without "BlazonGuild/", the game's
+-- files by their folder), leaving out this file (the handler and the event bus) and the lines with no file.
+function BG.StackOrigin(stack)
+  local out = {}
+  for line in tostring(stack or ""):gmatch("[^\n]+") do
+    local file, num = line:match('AddOns/([^"%]:]+%.lua)"?%]?:(%d+)')
+    if file and file ~= "BlazonGuild/Core/Init.lua" then
+      out[#out + 1] = file:gsub("^BlazonGuild/", "") .. ":" .. num
+      if #out >= 4 then
+        break
+      end
+    end
+  end
+  return table.concat(out, " < ")
+end
+
+local early = {} -- refusals before the saved data is loaded, kept for it
+local function refused(forbidden, addon, func)
+  if addon ~= ADDON_NAME then
+    return
+  end
+  local origin = BG.StackOrigin(type(debugstack) == "function" and debugstack(1, 20, 0) or "")
+  -- (technical words, never translated: what the game calls them)
+  local what = tostring(func or "?")
+  if forbidden then
+    what = what .. " " .. "FORBIDDEN"
+  end
+  if InCombatLockdown and InCombatLockdown() then
+    what = what .. " " .. "IN_COMBAT"
+  end
+  if origin ~= "" then
+    what = what .. " < " .. origin
+  end
+  if not BG.db then
+    early[#early + 1] = what
+    return
+  end
+  BG:RecordError("acción bloqueada por el juego", what)
+end
+BG:On("ADDON_ACTION_BLOCKED", function(addon, func)
+  refused(false, addon, func)
+end)
+BG:On("ADDON_ACTION_FORBIDDEN", function(addon, func)
+  refused(true, addon, func)
+end)
+BG:On("BG_READY", function()
+  for _, what in ipairs(early) do
+    BG:RecordError("acción bloqueada por el juego", what)
+  end
+  early = {}
+end)
 
 function BG:Print(msg)
   print("|cffd0b078BlazonGuild|r " .. (BG.T and BG.T(msg) or msg))

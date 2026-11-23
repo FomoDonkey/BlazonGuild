@@ -690,6 +690,14 @@ Board.letters = {
   ["0.29.2"] = {
     "Armería: cada objeto sale con su nombre y su icono (antes salía «Objeto 6189» con una interrogación). En tu propio equipo, la ventana del objeto ya no sale repetida al lado.",
   },
+  ["0.29.3"] = {
+    "Marcas: el escudo sobre los nombres y el aro del retrato de tu objetivo ya no tocan en combate los marcos protegidos del juego, que podían sacar «Las acciones de interfaz han fallado debido a este add-on» en la lista de accesorios.",
+    "Si el juego bloquea algo del addon, queda guardado con su origen en Administración, «Errores internos», para poder arreglarlo.",
+    "Quien lo instala ve un aviso que dice cómo abrirlo: /bg o el escudo junto al minimapa.",
+  },
+  ["0.29.4"] = {
+    "Ya no sale «BlazonGuild ha registrado un error interno» al combatir: en combate el addon pedía al juego el mensaje del día de la hermandad, y el juego no lo deja. Ahora lo lee al acabar el combate.",
+  },
 }
 
 -- A first install has nothing to catch up on: it starts at the current version, and only later updates

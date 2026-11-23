@@ -11,7 +11,7 @@
 | Versión del cliente | `1.60.1.70888` | `Wow.exe` (ProductVersion). La documentación anterior decía `70862`: el cliente se ha actualizado |
 | Versión de interfaz | `16001`, `WOW_PROJECT_ID = 18`, compilado el 9 nov 2026 | Sonda en el juego (`GetBuildInfo()`), 2026-11-12 |
 | Motor | 64 bits moderno (D3D12, registros `Housing.log`, `EditMode.log`) | Ficheros del cliente |
-| Cuenta y ruleset | `WTF\Account\1112576765#1\93\El-Peregrino\` (ruleset `93`) | Disco |
+| Cuenta y ruleset | `WTF\Account\XXXXXXXXXX#1\93\El-Peregrino\` (ruleset `93`) | Disco |
 | AddOns instalados | Ninguno (carpeta vacía) | Disco |
 | Límites de recursos por addon | 10 000 frames, 40 000 texturas, 5 000 textos, 300 fuentes, 500 temporizadores, 5 000 animaciones; **desactivados** (`LimitedLuaResources: Enabled = false`) | `Logs\General.log` |
 
@@ -44,6 +44,8 @@ Informe: `WTF\AccountXXXXXXX#1\SavedVariables\BlazonGuildProbe.lua` · captura r
 - **Un addon no puede conectarse a internet** (ni HTTP ni sockets). Solo escribe sus `SavedVariables`, y el juego los guarda en disco al hacer `/reload`, al cerrar sesión o al salir.
 - **Sí puede hablar con otros jugadores en tiempo real** mediante mensajes de addon (`C_ChatInfo.SendAddonMessage`) por los canales de hermandad, banda, grupo o susurro. El servidor del juego garantiza quién envía cada mensaje, así que la información que llega por la hermandad es fiable.
 - **Entre hermandades distintas no sirve un canal de chat oculto** en los servidores reales de Forever: los mensajes de addon por canales creados por jugadores no se entregan (Olympus midió 0 de 123 la noche del lanzamiento, `Relay.lua`). Sí se entregan los **susurros entre addons**, a cualquier jugador del mismo bando, y lo que un jugador escribe a mano en un canal normal. *Dato de Olympus, todavía no medido por nosotros.*
+- **En combate, los marcos protegidos del juego no se tocan** (placas de nombre, marco del objetivo y demás marcos de unidad): crear algo en ellos, moverlo o cambiar su tamaño, o enseñar o esconder un *marco* nuestro dentro, el juego lo rechaza (`ADDON_ACTION_BLOCKED`) y lo cuenta en la lista de accesorios («Las acciones de interfaz han fallado debido a este add-on: N»), sin decir qué ni desde dónde. Lo que sí se puede: texturas nuestras hechas y colocadas fuera de combate, y en combate solo `Show`/`Hide` de esas texturas (Olympus, `Nameplates.lua` y `Borders.lua`; nos pasó en la 0.29.2). Desde la 0.29.3 el addon guarda cada bloqueo con su origen en «Errores internos». Para el detalle completo, en el juego: `/console taintLog 1` y luego `Logs\taint.log`.
+- **En combate, el mensaje del día de la hermandad (`GetGuildRosterMOTD`) se le niega a un addon**: el juego dispara `ADDON_ACTION_BLOCKED` con «UNKNOWN()» y no devuelve nada (registro del juego del autor con la 0.29.3, 317 veces, 2026-11-21). En la misma lectura, `GetGuildInfo`, `GetNumGuildMembers`, `GetGuildRosterInfo`, `GetGuildRosterLastOnline` y `GuildControlGetRankName` no se bloquearon. Desde la 0.29.4 se lee solo fuera de combate.
 - **La web solo se entera mediante un puente**: una app compañera pequeña en el PC de cualquier miembro lee los `SavedVariables` y los sube a `POST /v1/ingest/addon`. A la inversa, deja lo nuevo de la web en un fichero que el addon carga al entrar o al hacer `/reload`.
 
 ## 3. Arquitectura de sincronización propuesta (Fase 6–7)

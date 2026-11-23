@@ -315,6 +315,30 @@ BG:On("PLAYER_LOGIN", function()
   BG:MinimapButton()
 end)
 
+-- A new install says how to open it (Peregrino, 2026-11-18: a guildmate installed it and did not know how, «no sé cómo
+-- se abre»: nothing showed until the window was opened). Until it has been opened once (the privacy question comes
+-- then), at three logins at most: a notice that opens it with a click, and a line in the chat.
+local WELCOME_TIMES = 3
+function BG.Welcome()
+  local s = BG.db.settings
+  if BG.demo or BG.Consent.Answered() or (s.welcomed or 0) >= WELCOME_TIMES or (BG.window and BG.window:IsShown()) then
+    return false
+  end
+  s.welcomed = (s.welcomed or 0) + 1
+  local how = s.minimapHidden and "Escribe /bg para abrirlo." or "Pulsa aquí, escribe /bg o usa el escudo junto al minimapa."
+  BG:Notify("BlazonGuild está listo", how, { kind = "info", view = "overview", duration = 20 })
+  BG:Print("listo. Ábrelo con /bg o con el escudo junto al minimapa (/bg ayuda: todos los comandos).")
+  return true
+end
+BG:On("PLAYER_LOGIN", function()
+  C_Timer.After(8, function()
+    local ok, err = pcall(BG.Welcome)
+    if not ok then
+      BG:RecordError("bienvenida", err)
+    end
+  end)
+end)
+
 BG.commands = BG.commands or {}
 BG.commands.minimapa = function()
   BG.db.settings.minimapHidden = not BG.db.settings.minimapHidden or nil

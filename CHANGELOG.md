@@ -4,6 +4,24 @@ All notable changes to the FOREVER product ecosystem are documented in this file
 
 ---
 
+## [0.33.5] — 2026-11-23 — Addon 0.29.4: el mensaje del día, nunca en combate
+
+### Arreglado
+- **«BlazonGuild ha registrado un error interno; queda guardado para revisarlo.»** en el chat, en los dos PC del autor. El registro de la 0.29.3 lo dijo: `acción bloqueada por el juego: UNKNOWN() IN_COMBAT < Data/Guild.lua:249 < Data/Guild.lua:315`, **317 veces** (2026-11-21). `Guild.Scan` pedía el mensaje del día (`GetGuildRosterMOTD`) en cada actualización de la lista de la hermandad, y en combate Forever se lo niega a un addon. Además, sin el mensaje cada lectura en combate veía «algo ha cambiado» y rehacía y repintaba la hermandad entera en cada pelea, y el Resumen perdía el mensaje del día hasta la siguiente actualización. Ahora en combate se guarda el último leído y se vuelve a leer al acabar el combate (`PLAYER_REGEN_ENABLED`). El resto de la lectura de la hermandad (miembros, rangos) sigue igual en combate: el juego no la bloquea (el registro solo tiene esa línea).
+
+### Añadido
+- El simulador niega el mensaje del día en combate como el juego (`ADDON_ACTION_BLOCKED` «UNKNOWN()»), y da el mismo registro que el juego del autor con el código de la 0.29.3. `tests/blocked.mjs`: en combate, cinco actualizaciones sin un bloqueo ni un repintado, un compañero que se conecta sí se ve, y el mensaje nuevo se lee al acabar (falla con el código de la 0.29.3: 7 bloqueos).
+
+## [0.33.4] — 2026-11-18 — Addon 0.29.3: nada protegido en combate, bloqueos guardados y bienvenida
+
+### Arreglado
+- **«Las acciones de interfaz han fallado debido a este add-on: 3»** (lista de accesorios del autor, 2026-11-18). Las marcas (`UI/Marks.lua`) eran *marcos* nuestros dentro de los marcos protegidos del juego: uno en la placa de nombre de cada compañero y otro en el marco del objetivo, y en combate se creaban, se movían, se redimensionaban y se enseñaban o escondían (en cada cambio de objetivo). El juego bloquea eso en combate. Ahora son solo **texturas**, hechas y colocadas fuera de combate (o donde el cliente dice que el marco no está protegido) y en combate solo se encienden y se apagan, que es lo que el juego permite (la forma que Olympus usa en Forever: `Nameplates.lua`, `Borders.lua`). Lo que un combate no deja hacer se hace al acabar (`PLAYER_REGEN_ENABLED`). En el simulador, el mismo rato de combate da 9 bloqueos con el código de la 0.29.2 y 0 con el nuevo.
+- **Quien instala no sabía cómo abrirlo** (un compañero de C A Ñ A D A: «no sé cómo se abre»): hasta abrir la ventana no salía nada. Ahora, mientras no se haya abierto nunca (tres veces como mucho), al entrar sale un aviso que lo abre con un clic y una línea en el chat: `/bg` o el escudo junto al minimapa.
+
+### Añadido
+- **Registro de acciones bloqueadas**: cada `ADDON_ACTION_BLOCKED` / `ADDON_ACTION_FORBIDDEN` de BlazonGuild queda en «Errores internos» (Administración y `/bg errores`) con la función que nombra el juego, si era en combate y la línea de donde vino (`BG.StackOrigin`: el juego manda el evento dentro de la llamada bloqueada, así que la pila aún la tiene). Un error repetido se cuenta (×N) en vez de ocupar la lista entera.
+- Simulador tan estricto como el juego en combate: el marco del objetivo y las placas de nombre están protegidos; crear, mover o redimensionar algo suyo, o enseñar o esconder un marco suyo, se rechaza y dispara `ADDON_ACTION_BLOCKED` (`SIM.blocked`). `tests/blocked.mjs` (9 comprobaciones): las marcas en combate, cada pantalla abierta en combate sin un bloqueo, el registro y la bienvenida. 361 comprobaciones en total.
+
 ## [0.33.3] — 2026-11-14 — Repositorio público y licencia MIT (el addon sigue en 0.29.2)
 
 ### Cambiado

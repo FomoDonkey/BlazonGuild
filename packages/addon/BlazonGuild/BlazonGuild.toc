@@ -9,7 +9,7 @@
 ## Notes-ptBR: Sua guilda dentro do jogo: raides, chat, mapa, Arena, profissões, tesouraria, rankings e mais, de addon para addon.
 ## Notes-ruRU: Ваша гильдия в игре: рейды, чат, карта, Арена, ремёсла, казна, рейтинги и многое другое, от аддона к аддону.
 ## Author: BlazonGuild
-## Version: 0.29.2
+## Version: 0.29.4
 ## SavedVariables: BlazonGuildDB
 ## IconTexture: Interface\AddOns\BlazonGuild\Media\logo.png
 ## AddonCompartmentFunc: BlazonGuild_OnAddonCompartmentClick

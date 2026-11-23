@@ -128,7 +128,8 @@ BG:RegisterView("admin", {
       local list = BG.db.errors or {}
       local items = {}
       for i = 1, math.min(4, #list) do
-        items[#items + 1] = { bullet = list[i].at:sub(1, 16):gsub("T", " ") .. "  (" .. tostring(list[i].version or "?") .. ")  " .. list[i].where .. ": " .. tostring(list[i].error):sub(1, 140) }
+        local times = (list[i].count or 1) > 1 and (" ×" .. list[i].count) or ""
+        items[#items + 1] = { bullet = list[i].at:sub(1, 16):gsub("T", " ") .. "  (" .. tostring(list[i].version or "?") .. ")" .. times .. "  " .. list[i].where .. ": " .. tostring(list[i].error):sub(1, 160) }
       end
       items[#items + 1] = { note = "Se guardan para poder corregirlos. Si me mandas una captura de esto, sé exactamente qué falló. Entre paréntesis, la versión del addon en la que pasó." }
       BG.UI.Dialog({ title = "Errores internos guardados", items = items, primary = { label = "Cerrar" },

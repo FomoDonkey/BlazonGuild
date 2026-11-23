@@ -207,6 +207,21 @@ function Guild.Request()
   end
 end
 
+-- The guild's message of the day. In combat Forever refuses it to an addon: ADDON_ACTION_BLOCKED «UNKNOWN()», 317
+-- times in a player's game with 0.29.3 (one per update of the guild list in a fight) and «ha registrado un error interno»
+-- in chat on both of their PCs; and with nothing back, every scan in a fight saw a change and rebuilt the guild. In
+-- combat the last one read is kept, and the guild is scanned again when the fight ends (PLAYER_REGEN_ENABLED, below).
+-- tests/blocked.mjs, with the stub refusing it in combat as the game does.
+local motdLater = false
+local function readMotd(was)
+  if InCombatLockdown and InCombatLockdown() then
+    motdLater = true
+    return was and was.motd or nil
+  end
+  motdLater = false
+  return GetGuildRosterMOTD and GetGuildRosterMOTD() or nil
+end
+
 local scratchMembers, scratchByGuid = {}, {}
 function Guild.Scan()
   if BG.demo then
@@ -246,8 +261,8 @@ function Guild.Scan()
   end
   local faction = UnitFactionGroup("player")
   faction = faction and faction:upper() or nil
-  local motd = GetGuildRosterMOTD and GetGuildRosterMOTD() or nil
   local was = Guild.info
+  local motd = readMotd(was)
   if not changed and was and was.name == guildName and was.myRank == myRank and was.myRankIndex == myRankIndex
     and was.faction == faction and was.motd == motd and #was.ranks == #ranks then
     local same = true
@@ -322,3 +337,8 @@ BG:On("PLAYER_LOGIN", function()
 end)
 BG:On("GUILD_ROSTER_UPDATE", scheduleScan)
 BG:On("PLAYER_GUILD_UPDATE", scheduleScan)
+BG:On("PLAYER_REGEN_ENABLED", function()
+  if motdLater then
+    scheduleScan() -- (the message of the day the fight kept from being read)
+  end
+end)

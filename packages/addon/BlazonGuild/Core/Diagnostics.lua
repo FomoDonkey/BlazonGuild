@@ -83,7 +83,7 @@ function Diag.Errors()
   BG:Print(#list .. " errores guardados (los más recientes primero):")
   for i = 1, math.min(5, #list) do
     local e = list[i]
-    line(e.at .. " v" .. tostring(e.version), e.where .. ": " .. e.error)
+    line(e.at .. " v" .. tostring(e.version) .. ((e.count or 1) > 1 and (" ×" .. e.count) or ""), e.where .. ": " .. e.error)
   end
 end
 

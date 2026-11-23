@@ -459,7 +459,18 @@ SIM.lastOnline = {}
 GetGuildRosterLastOnline = function(i) local d = SIM.lastOnline[i] or (i % 5) return 0, 0, d, 3 end
 GuildControlGetNumRanks = function() return #RANKS end
 GuildControlGetRankName = function(i) return RANKS[i] end
-GetGuildRosterMOTD = function() return "Raid el viernes a las 21:00" end
+-- The guild's message of the day. In combat Forever refuses it to an addon: nothing comes back and the game fires
+-- ADDON_ACTION_BLOCKED naming «UNKNOWN()» (a player's game with 0.29.3: 317 times, all in combat, all from the roster
+-- scan in Data/Guild.lua, 2026-11-21). Until 0.29.4 the stub answered in combat too, and no test could see it.
+SIM.motd = "Raid el viernes a las 21:00"
+GetGuildRosterMOTD = function()
+  if SIM.combat then
+    SIM.blocked[#SIM.blocked + 1] = "UNKNOWN()"
+    SIM.fire("ADDON_ACTION_BLOCKED", "BlazonGuild", "UNKNOWN()")
+    return nil
+  end
+  return SIM.motd
+end
 SIM.faction = "Alliance"
 UnitFactionGroup = function() return SIM.faction, SIM.faction == "Horde" and "Horda" or "Alianza" end
 SIM.units = {} -- unit -> GUID of what the player targets, mouses over or sees (layers)
@@ -513,7 +524,49 @@ GetBindingKey = function(action) return SIM.bindings[action] end
 GetBindingAction = function(key) return SIM.used[key] or "" end
 SIM.overrides = {}
 SetOverrideBindingClick = function(owner, prio, key, button) SIM.overrides[key] = button end
-InCombatLockdown = function() return false end
+SIM.combat = false
+InCombatLockdown = function() return SIM.combat end
+
+-- Protected frames in combat (0.29.3), as the game does on Forever (what Olympus found there: Nameplates.lua and
+-- Borders.lua): the game's secure frames (here the target frame and the nameplates) and what belongs to them (their
+-- textures, frames made inside them, what is anchored to them) cannot be made, moved or sized by an addon in combat,
+-- and a frame among them cannot be shown or hidden; a texture can. The game then does nothing, fires
+-- ADDON_ACTION_BLOCKED and counts it in the addon list («Las acciones de interfaz han fallado debido a este add-on»).
+-- SIM.blocked keeps each one, so a test can say that none happened (until 0.29.2 the stubs let all of it through).
+SIM.blocked = {}
+local function protectedObj(o, depth)
+  depth = depth or 0
+  if type(o) ~= "table" or depth > 20 then return false end
+  if o.__protected then return true end
+  if o.__parent and protectedObj(o.__parent, depth + 1) then return true end
+  for _, p in pairs(o.__points or {}) do
+    if p.rel and p.rel ~= o.__parent and protectedObj(p.rel, depth + 1) then return true end
+  end
+  return false
+end
+SIM.isProtected = protectedObj
+function Methods.IsProtected(self) return protectedObj(self), self.__protected == true end
+function Methods.GetParent(self) return self.__parent end
+local function guard(name, framesOnly)
+  local real = Methods[name]
+  Methods[name] = function(self, ...)
+    local region = self.__kind == "Texture" or self.__kind == "FontString"
+    if SIM.combat and not (framesOnly and region) and protectedObj(self) then
+      local label = (self.__kind or "Frame") .. ":" .. name .. "()"
+      SIM.blocked[#SIM.blocked + 1] = label
+      SIM.fire("ADDON_ACTION_BLOCKED", "BlazonGuild", label)
+      return nil
+    end
+    return real(self, ...)
+  end
+end
+for _, n in ipairs({ "SetPoint", "ClearAllPoints", "SetAllPoints", "SetSize", "SetWidth", "SetHeight", "CreateTexture", "CreateFontString" }) do guard(n) end
+for _, n in ipairs({ "Show", "Hide", "SetShown" }) do guard(n, true) end
+-- The game's debugstack: the call stack, each file named as the game names it (Interface/AddOns/BlazonGuild/...).
+debugstack = function(start)
+  if not (debug and debug.traceback) then return "" end
+  return (debug.traceback("", (start or 1) + 1):gsub("([%w_/]+%.lua):(%d+)", "Interface/AddOns/BlazonGuild/%1:%2"))
+end
 
 -- Chat (Entrega 4).
 function Methods.AddMessage(self, text) self.__lines = self.__lines or {} self.__lines[#self.__lines + 1] = text end
@@ -654,6 +707,7 @@ C_NamePlate = { GetNamePlateForUnit = function(unit)
   if not SIM.plates[unit] then
     local f = CreateFrame("Frame", nil, UIParent)
     f:SetSize(120, 30)
+    f.__protected = true -- (the game's own nameplate: protected in combat)
     SIM.plates[unit] = f
   end
   return SIM.plates[unit]
@@ -662,6 +716,7 @@ UnitExists = UnitExists or function(unit) return SIM.units[unit] ~= nil end
 TargetFrame = CreateFrame("Frame", nil, UIParent)
 TargetFrame.portrait = TargetFrame:CreateTexture(nil, "ARTWORK")
 TargetFrame.portrait:SetSize(64, 64)
+TargetFrame.__protected = true -- (the game's secure unit frame)
 
 SIM.unitGuids = {} -- unit -> GUID for units the test shows (target, nameplates)
 local stubUnitGUID = UnitGUID
