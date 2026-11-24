@@ -3,7 +3,7 @@
 ## Publicado (2026-11-14)
 
 - **Proyecto:** id `1803645`, https://www.curseforge.com/wow/addons/blazonguild (se ve como «preview» hasta que lo apruebe un moderador de CurseForge).
-- **Fichero:** «BlazonGuild 0.29.2» (aprobado, 2026-11-14) y «BlazonGuild 0.29.3» (subido el 2026-11-18), WoW Forever 1.60.1, Release, se publica solo al aprobarse. Para adjuntar el zip: interceptar el `click()` del campo de fichero que crea «Choose File» y usar la subida de ficheros del navegador sobre ese campo.
+- **Fichero:** «BlazonGuild 0.29.2» (aprobado, 2026-11-14), «BlazonGuild 0.29.3» (aprobado) y «BlazonGuild 0.29.4» (subido el 2026-11-24, «Under Review»), WoW Forever 1.60.1, Release, se publica solo al aprobarse. Para adjuntar el zip: interceptar el `click()` del campo de fichero que crea «Choose File» y usar la subida de ficheros del navegador sobre ese campo.
 - **Ajustes:** licencia MIT (desde el 2026-11-14; se creó con All Rights Reserved); enlace al código en «Source»; categorías Guild + Chat & Communication, PvP, Map & Minimap, Professions (CurseForge deja 4); comentarios activados (la descripción pide los fallos ahí); distribución a otras apps permitida; público.
 - **Capturas:** las del autor del juego, **sin recortar**. En la descripción van a 840 px de ancho (lo máximo que deja CurseForge, reducidas, nunca recortadas); en la galería, 18 a tamaño original. Copias en `packages/addon/dist/shots/` (no se suben a git). Faltan Raids y JcE.
 - **Descripción:** `description.en.md` con `{{shot:NN:texto}}` → `description.curseforge.html`. Primero qué es y una visita por cada parte con su captura; las novedades, al final.
@@ -44,7 +44,7 @@ Si CurseForge deja menos, quédate con las primeras.
 
 - **Licencia:** MIT (el autor, 2026-11-14; antes All Rights Reserved). Código en https://github.com/FomoDonkey/BlazonGuild. Dentro del addon van `LICENSE.txt` y `THIRD_PARTY_NOTICES.md` (lo adaptado de Olympus sigue con su MIT).
 - **Versión del juego:** WoW Forever, **1.60.1** (así lo etiqueta CurseForge; es la de Olympus). Solo Forever: BlazonGuild está hecho para cómo Forever da los nombres.
-- **Fichero:** `packages/addon/dist/BlazonGuild-0.29.2.zip` (la carpeta `BlazonGuild/` tal cual; comprobado que es idéntico a la carpeta).
+- **Fichero:** `packages/addon/dist/BlazonGuild-<versión>.zip` (la carpeta `BlazonGuild/` tal cual; comprobado que es idéntico a la carpeta). Desde la 0.29.4 se hace con la carpeta del repositorio público (sin nombres reales en comentarios ni ejemplos).
 
 ## Capturas reales (con el modo capturas)
 
