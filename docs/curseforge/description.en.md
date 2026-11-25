@@ -324,6 +324,12 @@ Type `/bg autoprueba`, press «Copy» and paste the report in the comments, alon
 
 ---
 
+## ☕ Support the addon
+
+BlazonGuild is free and will stay free: no ads, no paid features, nothing locked. If it helps your guild and you feel like it, you can [buy me a coffee](https://buymeacoffee.com/elacademico). It unlocks nothing; a comment or a bug report helps just as much.
+
+---
+
 ## 🙏 Credits
 
 - **Inspiration:** many of BlazonGuild's ideas come from the **Olympus** addon (MIT licence), rewritten for any guild and without its betting.
